@@ -7,8 +7,11 @@
 <title>qcode — Claude plans, your local Qwen executes, two skeptics gate it</title>
 <meta name="description" content="qcode is a local coding harness: Claude designs the end-to-end flow, a fast local Qwen MoE executes it in a background git worktree, and a mixed adversarial review (Claude + Qwen) gates the result before it merges.">
 <meta name="theme-color" content="#0b0e17">
+<link rel="canonical" href="https://sreenivas-sadhu-prabhakara.github.io/qcode/">
 <meta property="og:title" content="qcode — a local, review-gated coding harness">
 <meta property="og:description" content="Claude plans. Local Qwen executes in the background. Two independent skeptics decide 'done'.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sreenivas-sadhu-prabhakara.github.io/qcode/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,7 +20,7 @@
   :root{
     --bg:#0b0e17;--bg-2:#10141f;--bg-3:#161b29;--bg-4:#1b2233;
     --line:rgba(255,255,255,.09);--line-2:rgba(255,255,255,.06);
-    --text:#e7eaf3;--muted:#9aa3b8;--dim:#6b7488;
+    --text:#e7eaf3;--muted:#9aa3b8;--dim:#828ca3;
     --amber:#f6b93b;--amber-d:#3a2f14;
     --emerald:#34d399;--emerald-d:#123227;
     --rose:#fb7185;--rose-d:#331a22;
@@ -28,7 +31,7 @@
     --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;scroll-padding-top:92px}
   body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 500px at 82% -8%,rgba(246,185,59,.08),transparent 60%),radial-gradient(800px 500px at 12% 8%,rgba(52,211,153,.07),transparent 60%)}
   h1,h2,h3{font-weight:700;line-height:1.14;letter-spacing:-.02em}
@@ -45,36 +48,40 @@
   .btn-ghost:hover{border-color:var(--emerald);color:#fff}
   section{padding-block:clamp(56px,8vw,92px)}
   .sec-head{max-width:660px;margin-bottom:44px}
-  .sec-head.center{margin-inline:auto;text-align:center}
   .sec-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem);margin:12px 0 12px}
   .sec-head p{color:var(--muted);font-size:1.05rem}
 
   /* nav */
-  header{position:sticky;top:0;z-index:50;background:rgba(11,14,23,.78);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:.3s}
+  header{position:sticky;top:0;z-index:50;background:rgba(11,14,23,.82);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:.3s}
   header.scrolled{border-color:var(--line);box-shadow:0 10px 30px -20px #000}
   header .wrap{display:flex;align-items:center;justify-content:space-between;padding-block:14px;gap:20px}
   .logo{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:700;font-size:1.18rem;letter-spacing:-.02em}
   .logo .lmk{width:32px;height:32px;border-radius:8px;background:var(--bg-3);border:1px solid var(--line);display:grid;place-items:center}
   .logo .lmk svg{width:20px;height:20px}
   .logo b{color:#fff}.logo .prompt{color:var(--emerald)}
-  .nl{display:flex;align-items:center;gap:28px}
+  .nl{display:flex;align-items:center;gap:26px}
   .nl a{font-size:.9rem;color:var(--muted);font-weight:500;transition:.2s}
   .nl a:hover{color:#fff}
   .nl .gh{display:inline-flex;align-items:center;gap:7px;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:7px 13px}
   .nl .gh:hover{border-color:var(--emerald)}
-  .menu-btn{display:none;background:var(--bg-3);border:1px solid var(--line);border-radius:8px;width:42px;height:42px;cursor:pointer;color:var(--text)}
-  @media(max-width:820px){.nl a:not(.gh){display:none}}
+  @media(max-width:820px){
+    header .wrap{flex-wrap:wrap}
+    .nl{order:3;width:100%;gap:12px 18px;flex-wrap:wrap;justify-content:flex-start;padding-top:12px;margin-top:4px;border-top:1px solid var(--line-2)}
+    .nl a{font-size:.85rem}
+    .nl .gh{margin-left:auto}
+  }
 
   /* hero */
-  .hero{padding-top:clamp(48px,7vw,86px);padding-bottom:clamp(40px,6vw,70px)}
+  .hero{padding-top:clamp(48px,7vw,80px);padding-bottom:clamp(40px,6vw,70px)}
   .hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:52px;align-items:center}
   .status-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.76rem;color:var(--amber);background:var(--amber-d);border:1px solid rgba(246,185,59,.3);border-radius:100px;padding:5px 13px;margin-bottom:22px}
   .status-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(246,185,59,.2)}
-  .hero h1{font-size:clamp(2.3rem,5.4vw,3.7rem);font-weight:800;letter-spacing:-.03em}
+  .hero h1{font-size:clamp(2.3rem,5.4vw,3.7rem);font-weight:800;letter-spacing:-.03em;text-wrap:balance}
+  .hero h1 .hl{display:block}
   .hero h1 .a{color:var(--amber)}.hero h1 .e{color:var(--emerald)}.hero h1 .r{color:var(--rose)}
   .hero .lede{color:var(--muted);font-size:clamp(1.05rem,1.6vw,1.2rem);margin:22px 0 30px;max-width:46ch}
   .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:38px}}
+  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px}}
 
   /* terminal */
   .term{background:linear-gradient(180deg,#0c1120,#0a0e19);border:1px solid var(--line);border-radius:14px;box-shadow:0 40px 80px -40px #000,inset 0 1px 0 rgba(255,255,255,.04);overflow:hidden;font-family:var(--mono);font-size:.82rem}
@@ -83,10 +90,11 @@
   .term-dots i{width:11px;height:11px;border-radius:50%;display:block}
   .term-dots i:nth-child(1){background:#ff5f57}.term-dots i:nth-child(2){background:#febc2e}.term-dots i:nth-child(3){background:#28c840}
   .term-title{color:var(--dim);font-size:.76rem;letter-spacing:.02em}
-  .term-body{padding:18px 18px 22px;line-height:1.85;white-space:pre-wrap;overflow-x:auto}
+  .term-body{padding:18px 18px 22px;line-height:1.9;white-space:pre;overflow-x:auto}
   .term-body .cmd{color:#fff}.term-body .p{color:var(--emerald)}
-  .term-body .ok{color:var(--emerald)}.term-body .run{color:var(--amber)}.term-body .rev{color:var(--rose)}.term-body .v{color:var(--violet)}
+  .term-body .ok{color:var(--emerald)}.term-body .cl{color:var(--amber)}.term-body .qw{color:var(--emerald)}.term-body .v{color:var(--violet)}
   .term-body .dim{color:var(--dim)}
+  .term-cap{font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:10px;text-align:right}
 
   /* three-up idea */
   .idea-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
@@ -106,23 +114,32 @@
   .stage{background:var(--bg-3);border:1px solid var(--line);border-radius:14px;padding:20px 16px;position:relative;z-index:1}
   .stage .num{font-family:var(--mono);font-size:.72rem;color:var(--dim)}
   .stage .who{font-family:var(--mono);font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin:8px 0 6px}
-  .stage h4{font-size:1.02rem;margin-bottom:6px}
+  .stage h3{font-size:1.02rem;margin-bottom:6px}
   .stage p{color:var(--muted);font-size:.83rem;line-height:1.5}
+  .stage code{font-family:var(--mono);font-size:.78rem;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 5px}
+  .stage code.a{color:var(--amber)}.stage code.e{color:var(--emerald)}
   .stage.s1{border-top:3px solid var(--amber)}.stage.s1 .who{color:var(--amber)}
   .stage.s2{border-top:3px solid var(--violet)}.stage.s2 .who{color:var(--violet)}
   .stage.s3{border-top:3px solid var(--emerald)}.stage.s3 .who{color:var(--emerald)}
   .stage.s4{border-top:3px solid var(--rose)}.stage.s4 .who{color:var(--rose)}
   .stage.s5{border-top:3px solid var(--emerald)}.stage.s5 .who{color:var(--emerald)}
-  .flow .conn{position:absolute;top:50%;left:-11px;transform:translateY(-50%);color:var(--dim);z-index:2}
-  .loopback{margin-top:20px;display:flex;align-items:center;gap:10px;justify-content:center;font-family:var(--mono);font-size:.8rem;color:var(--rose)}
-  .loopback svg{width:20px;height:20px}
-  @media(max-width:900px){.flow{grid-template-columns:1fr}.flow .conn{display:none}}
+  .flow .conn{position:absolute;top:50%;left:-11px;transform:translateY(-50%);color:var(--muted);font-size:1.15rem;z-index:2;line-height:1}
+  .loopback{margin-top:22px;display:flex;align-items:center;gap:14px;justify-content:center;background:var(--rose-d);border:1px solid rgba(251,113,133,.35);border-radius:12px;padding:14px 20px;color:#f3c0c8;font-size:.9rem}
+  .loopback .lb-ic{flex:none;width:38px;height:38px;border-radius:10px;background:rgba(251,113,133,.15);display:grid;place-items:center}
+  .loopback .lb-ic svg{width:22px;height:22px;stroke:var(--rose);fill:none}
+  .loopback b{color:var(--rose);font-family:var(--mono)}
+  @media(max-width:900px){.flow{grid-template-columns:1fr}.flow .conn{left:50%;top:-12px;transform:translateX(-50%) rotate(90deg)}}
 
   /* architecture cards */
   .arch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
   .acard{background:var(--bg-3);border:1px solid var(--line);border-radius:var(--r);padding:26px}
-  .acard .tag{font-family:var(--mono);font-size:.72rem;color:var(--emerald);letter-spacing:.06em}
-  .acard h3{font-size:1.22rem;margin:8px 0 8px}
+  .acard .tag{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;font-weight:600;display:inline-flex;align-items:center;gap:7px}
+  .acard .tag::before{content:"";width:8px;height:8px;border-radius:50%}
+  .acard .tag.a{color:var(--amber)}.acard .tag.a::before{background:var(--amber)}
+  .acard .tag.e{color:var(--emerald)}.acard .tag.e::before{background:var(--emerald)}
+  .acard .tag.r{color:var(--rose)}.acard .tag.r::before{background:var(--rose)}
+  .acard .tag.v{color:var(--violet)}.acard .tag.v::before{background:var(--violet)}
+  .acard h3{font-size:1.22rem;margin:9px 0 8px}
   .acard p{color:var(--muted);font-size:.93rem;margin-bottom:12px}
   .acard code{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:.82em;color:var(--amber)}
   @media(max-width:760px){.arch-grid{grid-template-columns:1fr}}
@@ -135,7 +152,7 @@
   .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
   table{width:100%;border-collapse:collapse;font-size:.9rem}
   th,td{text-align:left;padding:13px 18px;border-bottom:1px solid var(--line-2);vertical-align:top}
-  th{background:var(--bg-3);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:600}
+  th{background:var(--bg-3);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
   tr:last-child td{border-bottom:none}
   td code{font-family:var(--mono);color:var(--emerald);white-space:nowrap}
   td .muted{color:var(--muted)}
@@ -144,7 +161,7 @@
   .principles{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
   .pr{background:var(--bg-3);border:1px solid var(--line);border-radius:14px;padding:22px 24px;display:flex;gap:16px}
   .pr .n{font-family:var(--mono);font-weight:700;color:var(--emerald);font-size:1.1rem;flex:none}
-  .pr h4{font-size:1.05rem;margin-bottom:5px}
+  .pr h3{font-size:1.05rem;margin-bottom:5px}
   .pr p{color:var(--muted);font-size:.9rem}
   @media(max-width:760px){.principles{grid-template-columns:1fr}}
 
@@ -160,7 +177,7 @@
   .rrow p b{color:var(--text)}
   @media(max-width:620px){.rrow{grid-template-columns:1fr;gap:6px}}
 
-  footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--dim);font-size:.86rem}
+  footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--muted);font-size:.86rem}
   footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
   footer .logo{font-size:1rem}
   footer a{color:var(--muted)}footer a:hover{color:var(--emerald)}
@@ -187,7 +204,7 @@
       <a href="#setup">Setup</a>
       <a href="#roadmap">Roadmap</a>
       <a class="gh" href="https://github.com/Sreenivas-Sadhu-Prabhakara/qcode" target="_blank" rel="noopener">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7 0-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.8-2.3 4.7-4.6 4.9.4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.4-2.2-.2-4.6-1.1-4.6-4.9 0-1.1.4-2 1-2.7 0-.3-.4-1.3.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.6 1 2.7 0 3.8-2.3 4.7-4.6 4.9.4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
         GitHub
       </a>
     </nav>
@@ -199,24 +216,27 @@
   <div class="wrap">
     <div class="reveal">
       <div class="status-pill"><span class="dot"></span> Design reference · v0 · harness in development</div>
-      <h1>Claude <span class="a">plans</span>.<br>Your local Qwen <span class="e">executes</span>.<br>Two skeptics <span class="r">gate</span> it.</h1>
+      <h1><span class="hl">Claude <span class="a">plans</span>.</span><span class="hl">Your local Qwen <span class="e">executes</span>.</span><span class="hl">Two skeptics <span class="r">gate</span> it.</span></h1>
       <p class="lede">qcode is a local coding harness. A strong model designs the end-to-end flow; a fast local Qwen writes the code in a background git worktree; a mixed adversarial review decides "done" before anything merges.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#pipeline">See how it works</a>
         <a class="btn btn-ghost" href="https://github.com/Sreenivas-Sadhu-Prabhakara/qcode" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
     </div>
-    <div class="term reveal" role="img" aria-label="Terminal showing a qcode run: queued, plan, isolate, execute, review, done">
-      <div class="term-bar"><div class="term-dots"><i></i><i></i><i></i></div><div class="term-title">~/api — qcode</div></div>
+    <div>
+      <div class="term reveal" role="img" aria-label="Terminal showing a qcode run: queued, plan, isolate, execute, review, done — all stages complete with tests green">
+        <div class="term-bar"><div class="term-dots"><i></i><i></i><i></i></div><div class="term-title">~/api — qcode</div></div>
 <div class="term-body"><span class="p">$</span> <span class="cmd">qcode run "add cursor pagination to GET /users" --repo ~/api</span>
 
   <span class="ok">✔</span> queued        <span class="dim">job q7f3a</span>
-  <span class="run">●</span> plan          <span class="run">claude</span> <span class="dim">· spec + 6 acceptance tests written</span>
-  <span class="v">●</span> isolate       <span class="v">git worktree</span> <span class="dim">q7f3a  (off main)</span>
-  <span class="ok">●</span> execute       <span class="ok">qwen</span> <span class="dim">· step 4/5 · npm test → 5/6 green</span>
-  <span class="rev">●</span> review        <span class="rev">claude</span> <span class="ok">✔</span>   <span class="rev">qwen</span> <span class="ok">✔</span>    <span class="dim">0 defects</span>
+  <span class="ok">✔</span> plan          <span class="cl">claude</span> <span class="dim">· spec + 6 acceptance tests written</span>
+  <span class="ok">✔</span> isolate       <span class="v">git worktree</span> <span class="dim">q7f3a  (off main)</span>
+  <span class="ok">✔</span> execute       <span class="qw">qwen</span> <span class="dim">· step 5/5 · npm test → 6/6 green</span>
+  <span class="ok">✔</span> review        <span class="cl">claude</span> <span class="ok">✔</span>   <span class="qw">qwen</span> <span class="ok">✔</span>    <span class="dim">0 defects</span>
   <span class="ok">✔</span> done          <span class="dim">+214 −38 · 12 files ·</span> <span class="cmd">qcode diff q7f3a</span>
 </div>
+      </div>
+      <p class="term-cap reveal">illustrative — terminal output is a mockup</p>
     </div>
   </div>
 </section>
@@ -224,13 +244,13 @@
 <!-- IDEA -->
 <section id="idea">
   <div class="wrap">
-    <div class="sec-head center reveal">
+    <div class="sec-head reveal">
       <span class="eyebrow">Why it's built this way</span>
       <h2>Each model does what it's best at</h2>
-      <p>Claude is excellent but costs tokens per step. Local Qwen is fast and private but weaker. qcode splits the work so the expensive model only plans, the cheap one does the bulk — and review catches the difference.</p>
+      <p>Claude is excellent but costs tokens per step. Local Qwen is fast and private but weaker. qcode splits the work so the expensive model plans and gates but never grinds the loop, while the cheap local one does the bulk of the writing.</p>
     </div>
     <div class="idea-grid">
-      <div class="icard a reveal"><span class="role">Planner</span><h3>Claude designs the flow</h3><p>Fable/Opus 5 turns your task into a step-by-step plan <b>and writes a failing acceptance-test suite first</b>. It plans once, then steps back — it isn't in the hot loop.</p></div>
+      <div class="icard a reveal"><span class="role">Planner</span><h3>Claude designs the flow</h3><p>Claude turns your task into a step-by-step plan <b>and writes a failing acceptance-test suite first</b>. It plans once, then steps back — it isn't in the hot loop.</p></div>
       <div class="icard e reveal"><span class="role">Executor</span><h3>Qwen writes the code</h3><p>The local Qwen3-Coder MoE (~82 tok/s on an M2 Max) writes and revises code against the tests in a throwaway worktree — fast, private, and free of per-token cost.</p></div>
       <div class="icard r reveal"><span class="role">Reviewers</span><h3>Two skeptics decide "done"</h3><p>One Claude and one Qwen reviewer independently try to <b>refute</b> the diff — running tests and types, not just reading. A real defect loops the job back to the executor.</p></div>
     </div>
@@ -240,21 +260,21 @@
 <!-- PIPELINE -->
 <section class="pipe" id="pipeline">
   <div class="wrap">
-    <div class="sec-head center reveal">
+    <div class="sec-head reveal">
       <span class="eyebrow">The pipeline</span>
       <h2>One job, five stages, one queue</h2>
       <p>You submit a task and get a job id instantly. A background daemon runs jobs one at a time (the local model is single-lane) and reports status back.</p>
     </div>
     <div class="flow">
-      <div class="stage s1 reveal"><div class="num">01</div><div class="who">Claude</div><h4>Plan</h4><p><code style="font-family:var(--mono);color:var(--amber);font-size:.8rem">claude -p</code> writes a JSON flow + a failing acceptance-test suite.</p></div>
-      <div class="stage s2 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">02</div><div class="who">Git</div><h4>Isolate</h4><p>A per-job git worktree off your branch — your working tree is never touched.</p></div>
-      <div class="stage s3 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">03</div><div class="who">Qwen · Aider</div><h4>Execute</h4><p>Qwen writes edits step-by-step and runs the tests until they go green.</p></div>
-      <div class="stage s4 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">04</div><div class="who">Claude + Qwen</div><h4>Gate</h4><p>Two independent skeptics attack the diff. Both must pass.</p></div>
-      <div class="stage s5 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">05</div><div class="who">Done</div><h4>Deliver</h4><p>A reviewed <code style="font-family:var(--mono);color:var(--emerald);font-size:.8rem">diff.patch</code> ready for <code style="font-family:var(--mono);color:var(--emerald);font-size:.8rem">qcode merge</code>.</p></div>
+      <div class="stage s1 reveal"><div class="num">01</div><div class="who">Claude</div><h3>Plan</h3><p><code class="a">claude -p</code> writes a JSON flow + a failing acceptance-test suite.</p></div>
+      <div class="stage s2 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">02</div><div class="who">Git</div><h3>Isolate</h3><p>A per-job git worktree off your branch — your working tree is never touched.</p></div>
+      <div class="stage s3 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">03</div><div class="who">Qwen · Aider</div><h3>Execute</h3><p>Qwen writes edits step-by-step and runs the tests until they go green.</p></div>
+      <div class="stage s4 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">04</div><div class="who">Claude + Qwen</div><h3>Gate</h3><p>Two independent skeptics attack the diff. Both must pass.</p></div>
+      <div class="stage s5 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">05</div><div class="who">Done</div><h3>Deliver</h3><p>A reviewed <code class="e">diff.patch</code> ready for <code class="e">qcode merge</code>.</p></div>
     </div>
     <div class="loopback reveal">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 1 3 6.7"/><path d="M3 20v-5h5"/></svg>
-      a caught defect loops Gate → Execute, up to 3 times, then hands back <span class="mono" style="color:var(--rose)">status=blocked</span> with the diff + findings
+      <span class="lb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/></svg></span>
+      <div>When a reviewer finds a real defect, <b>Gate → Execute</b> loops back, up to <b>3×</b> — then the job hands back <span class="mono" style="color:var(--rose)">status=blocked</span> with the diff and findings attached. Nothing merges on a failure.</div>
     </div>
   </div>
 </section>
@@ -268,10 +288,10 @@
       <p>The executor is <b>Aider</b> in architect/editor mode — it already ships the hard parts (SEARCH/REPLACE edits, a test-fix loop, repo-mapping). qcode owns the genuinely new layer: the queue, the worktree isolation, and the mixed adversarial gate.</p>
     </div>
     <div class="arch-grid">
-      <div class="acard reveal"><span class="tag">planner</span><h3>Claude via the CLI</h3><p>Shells out to <code>claude -p</code> — reuses your Claude Code subscription, no separate API key. Emits a validated JSON plan and the acceptance oracle.</p></div>
-      <div class="acard reveal"><span class="tag">executor</span><h3>Aider, editor = local Qwen</h3><p><code>--architect</code> with <code>--editor-model openai/qwen</code> pointed at LiteLLM <code>:4000</code>. Runs <code>--no-auto-commits</code> in the worktree with <code>--test-cmd</code>.</p></div>
-      <div class="acard reveal"><span class="tag">reviewers</span><h3>1 Claude + 1 Qwen skeptic</h3><p>Independent, blocking, execution-grounded. Each is prompted to refute against the acceptance criteria — a defect only counts with a concrete failing scenario.</p></div>
-      <div class="acard reveal"><span class="tag">queue</span><h3>File-based daemon</h3><p>Jobs live as files under <code>~/.qcode/jobs/&lt;id&gt;/</code>. The filesystem is the queue and the status API — no socket, serial by construction, crash-durable.</p></div>
+      <div class="acard reveal"><span class="tag a">planner</span><h3>Claude via the CLI</h3><p>Shells out to <code>claude -p</code> — reuses your Claude Code subscription, no separate API key. Emits a validated JSON plan and the acceptance oracle.</p></div>
+      <div class="acard reveal"><span class="tag e">executor</span><h3>Aider, editor = local Qwen</h3><p><code>--architect</code> with <code>--editor-model openai/qwen</code> pointed at LiteLLM <code>:4000</code>. Runs <code>--no-auto-commits</code> in the worktree with <code>--test-cmd</code>.</p></div>
+      <div class="acard reveal"><span class="tag r">reviewers</span><h3>1 Claude + 1 Qwen skeptic</h3><p>Independent, blocking, execution-grounded. Each is prompted to refute against the acceptance criteria — a defect only counts with a concrete failing scenario.</p></div>
+      <div class="acard reveal"><span class="tag v">queue</span><h3>File-based daemon</h3><p>Jobs live as files under <code>~/.qcode/jobs/&lt;id&gt;/</code>. The filesystem is the queue and the status API — no socket, serial by construction, crash-durable.</p></div>
     </div>
   </div>
 </section>
@@ -286,7 +306,7 @@
     </div>
     <div class="tablewrap reveal">
       <table>
-        <tr><th>Command</th><th>What it does</th></tr>
+        <tr><th scope="col">Command</th><th scope="col">What it does</th></tr>
         <tr><td><code>qcode run "task" --repo &lt;path&gt;</code></td><td><span class="muted">Plan → execute → review a task in the background. Prints a job id and returns immediately.</span></td></tr>
         <tr><td><code>qcode status &lt;id&gt;</code></td><td><span class="muted">Show a job's current stage, loop count and result.</span></td></tr>
         <tr><td><code>qcode watch &lt;id&gt;</code></td><td><span class="muted">Live-follow a job to completion.</span></td></tr>
@@ -318,22 +338,22 @@
 <span class="a">npm i -g qcode</span>
 <span class="a">qcode</span> run <span class="g">"add a --json flag to the export command"</span> <span class="k">--repo</span> ~/myproject
 <span class="c">›</span> queued job a1b2c   <span class="c"># check back with:  qcode watch a1b2c</span></pre>
-    <p class="reveal" style="color:var(--dim);font-size:.86rem;margin-top:14px;font-family:var(--mono)">Local model verified at ~82 tok/s warm on a 64 GB M2 Max · single-lane, so jobs run serially by design.</p>
+    <p class="reveal" style="color:var(--muted);font-size:.86rem;margin-top:14px;font-family:var(--mono)">Local model verified at ~82 tok/s warm on a 64 GB M2 Max · single-lane, so jobs run serially by design.</p>
   </div>
 </section>
 
 <!-- PRINCIPLES -->
 <section id="principles">
   <div class="wrap">
-    <div class="sec-head center reveal">
+    <div class="sec-head reveal">
       <span class="eyebrow">Design principles</span>
       <h2>Why it can trust a weaker model</h2>
     </div>
     <div class="principles">
-      <div class="pr reveal"><div class="n">01</div><div><h4>"Done" is objective</h4><p>Claude writes the failing tests before any code. The executor grinds against ground truth, not vibes — so a fast, weaker model can be trusted to iterate on its own.</p></div></div>
-      <div class="pr reveal"><div class="n">02</div><div><h4>Review is execution, not opinion</h4><p>The skeptics run the tests, types and linters and try to construct a breaking input — an adversary that executes beats one that only reads.</p></div></div>
-      <div class="pr reveal"><div class="n">03</div><div><h4>Two lenses, independently</h4><p>A strong Claude skeptic plus a cheap local one catch different failure modes. Blocking on both is the quality multiplier — not belt-and-suspenders.</p></div></div>
-      <div class="pr reveal"><div class="n">04</div><div><h4>Honest about status</h4><p>No auto-merge, no silent truncation. A job is <span class="mono accent-e">done</span> only when tests and both reviewers pass; otherwise it's <span class="mono accent-r">blocked</span> with the evidence attached.</p></div></div>
+      <div class="pr reveal"><div class="n">01</div><div><h3>"Done" is objective</h3><p>Claude writes the failing tests before any code. The executor grinds against ground truth, not vibes — so a fast, weaker model can be trusted to iterate on its own.</p></div></div>
+      <div class="pr reveal"><div class="n">02</div><div><h3>Review is execution, not opinion</h3><p>The skeptics run the tests, types and linters and try to construct a breaking input — an adversary that executes beats one that only reads.</p></div></div>
+      <div class="pr reveal"><div class="n">03</div><div><h3>Two lenses, independently</h3><p>A strong Claude skeptic plus a cheap local one catch different failure modes. Blocking on both is the quality multiplier — not belt-and-suspenders.</p></div></div>
+      <div class="pr reveal"><div class="n">04</div><div><h3>Honest about status</h3><p>No auto-merge, no silent truncation. A job is <span class="mono accent-e">done</span> only when tests and both reviewers pass; otherwise it's <span class="mono accent-r">blocked</span> with the evidence attached.</p></div></div>
     </div>
   </div>
 </section>
