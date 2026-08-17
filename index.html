@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <script>document.documentElement.classList.add('js')</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>qcode — Claude plans, your local Qwen executes, two skeptics gate it</title>
-<meta name="description" content="qcode is a local coding harness: Claude designs the end-to-end flow, a fast local Qwen MoE executes it in a background git worktree, and a mixed adversarial review (Claude + Qwen) gates the result before it merges.">
+<title>qcode — Claude plans, your local Qwen executes, a cross-vendor jury gates it</title>
+<meta name="description" content="qcode is a local coding harness: Claude designs the end-to-end flow, a fast local Qwen MoE executes it in a background git worktree, and a cross-vendor adversarial gate (Qwen + Codex blocking, Gemini advising) decides 'done' before it merges.">
 <meta name="theme-color" content="#0b0e17">
 <link rel="canonical" href="https://sreenivas-sadhu-prabhakara.github.io/qcode/">
 <meta property="og:title" content="qcode — a local, review-gated coding harness">
-<meta property="og:description" content="Claude plans. Local Qwen executes in the background. Two independent skeptics decide 'done'.">
+<meta property="og:description" content="Claude plans. Local Qwen executes in the background. A cross-vendor jury — Qwen, Codex, Gemini — decides 'done'.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sreenivas-sadhu-prabhakara.github.io/qcode/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,6 +93,7 @@
   .term-body{padding:18px 18px 22px;line-height:1.9;white-space:pre;overflow-x:auto}
   .term-body .cmd{color:#fff}.term-body .p{color:var(--emerald)}
   .term-body .ok{color:var(--emerald)}.term-body .cl{color:var(--amber)}.term-body .qw{color:var(--emerald)}.term-body .v{color:var(--violet)}
+  .term-body .cx{color:var(--sky)}.term-body .gm{color:var(--rose)}.term-body .warn{color:var(--amber)}
   .term-body .dim{color:var(--dim)}
   .term-cap{font-family:var(--mono);font-size:.72rem;color:var(--dim);margin-top:10px;text-align:right}
 
@@ -216,15 +217,15 @@
   <div class="wrap">
     <div class="reveal">
       <div class="status-pill"><span class="dot"></span> Design reference · v0 · harness in development</div>
-      <h1><span class="hl">Claude <span class="a">plans</span>.</span><span class="hl">Your local Qwen <span class="e">executes</span>.</span><span class="hl">Two skeptics <span class="r">gate</span> it.</span></h1>
-      <p class="lede">qcode is a local coding harness. A strong model designs the end-to-end flow; a fast local Qwen writes the code in a background git worktree; a mixed adversarial review decides "done" before anything merges.</p>
+      <h1><span class="hl">Claude <span class="a">plans</span>.</span><span class="hl">Your local Qwen <span class="e">executes</span>.</span><span class="hl">A cross-vendor jury <span class="r">gates</span> it.</span></h1>
+      <p class="lede">qcode is a local coding harness. Claude designs the flow and writes the tests; a fast local Qwen writes the code in a background git worktree; then a three-vendor jury — Qwen and Codex blocking, Gemini advising — tries to break it before anything merges.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#pipeline">See how it works</a>
         <a class="btn btn-ghost" href="https://github.com/Sreenivas-Sadhu-Prabhakara/qcode" target="_blank" rel="noopener">View on GitHub ↗</a>
       </div>
     </div>
     <div>
-      <div class="term reveal" role="img" aria-label="Terminal showing a qcode run: queued, plan, isolate, execute, review, done — all stages complete with tests green">
+      <div class="term reveal" role="img" aria-label="Terminal showing a qcode run: queued, plan, isolate, execute, gate, done — Qwen and Codex pass as blocking reviewers, Gemini adds one advisory note, tests green">
         <div class="term-bar"><div class="term-dots"><i></i><i></i><i></i></div><div class="term-title">~/api — qcode</div></div>
 <div class="term-body"><span class="p">$</span> <span class="cmd">qcode run "add cursor pagination to GET /users" --repo ~/api</span>
 
@@ -232,7 +233,7 @@
   <span class="ok">✔</span> plan          <span class="cl">claude</span> <span class="dim">· spec + 6 acceptance tests written</span>
   <span class="ok">✔</span> isolate       <span class="v">git worktree</span> <span class="dim">q7f3a  (off main)</span>
   <span class="ok">✔</span> execute       <span class="qw">qwen</span> <span class="dim">· step 5/5 · npm test → 6/6 green</span>
-  <span class="ok">✔</span> review        <span class="cl">claude</span> <span class="ok">✔</span>   <span class="qw">qwen</span> <span class="ok">✔</span>    <span class="dim">0 defects</span>
+  <span class="ok">✔</span> gate          <span class="qw">qwen</span> <span class="ok">✔</span>  <span class="cx">codex</span> <span class="ok">✔</span>  <span class="dim">·</span> <span class="gm">gemini</span> <span class="warn">⚠</span> <span class="dim">1 advisory note</span>
   <span class="ok">✔</span> done          <span class="dim">+214 −38 · 12 files ·</span> <span class="cmd">qcode diff q7f3a</span>
 </div>
       </div>
@@ -247,12 +248,12 @@
     <div class="sec-head reveal">
       <span class="eyebrow">Why it's built this way</span>
       <h2>Each model does what it's best at</h2>
-      <p>Claude is excellent but costs tokens per step. Local Qwen is fast and private but weaker. qcode splits the work so the expensive model plans and gates but never grinds the loop, while the cheap local one does the bulk of the writing.</p>
+      <p>Claude is excellent but costs tokens per step. Local Qwen is fast and private but weaker. qcode splits the work so the expensive model plans once and then steps out — never grinding the loop, never reviewing — while the cheap local one does the bulk of the writing and two other vendors sit the jury.</p>
     </div>
     <div class="idea-grid">
       <div class="icard a reveal"><span class="role">Planner</span><h3>Claude designs the flow</h3><p>Claude turns your task into a step-by-step plan <b>and writes a failing acceptance-test suite first</b>. It plans once, then steps back — it isn't in the hot loop.</p></div>
       <div class="icard e reveal"><span class="role">Executor</span><h3>Qwen writes the code</h3><p>The local Qwen3-Coder MoE (~82 tok/s on an M2 Max) writes and revises code against the tests in a throwaway worktree — fast, private, and free of per-token cost.</p></div>
-      <div class="icard r reveal"><span class="role">Reviewers</span><h3>Two skeptics decide "done"</h3><p>One Claude and one Qwen reviewer independently try to <b>refute</b> the diff — running tests and types, not just reading. A real defect loops the job back to the executor.</p></div>
+      <div class="icard r reveal"><span class="role">Reviewers</span><h3>A cross-vendor jury decides "done"</h3><p>Qwen and Codex each independently try to <b>refute</b> the diff — running tests and types, not just reading — and either can veto. Gemini adds a third frontier lens as advisory. Codex and Gemini never saw it written; Qwen re-attacks its own diff in a fresh context. A real defect loops the job back.</p></div>
     </div>
   </div>
 </section>
@@ -269,12 +270,12 @@
       <div class="stage s1 reveal"><div class="num">01</div><div class="who">Claude</div><h3>Plan</h3><p><code class="a">claude -p</code> writes a JSON flow + a failing acceptance-test suite.</p></div>
       <div class="stage s2 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">02</div><div class="who">Git</div><h3>Isolate</h3><p>A per-job git worktree off your branch — your working tree is never touched.</p></div>
       <div class="stage s3 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">03</div><div class="who">Qwen · Aider</div><h3>Execute</h3><p>Qwen writes edits step-by-step and runs the tests until they go green.</p></div>
-      <div class="stage s4 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">04</div><div class="who">Claude + Qwen</div><h3>Gate</h3><p>Two independent skeptics attack the diff. Both must pass.</p></div>
+      <div class="stage s4 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">04</div><div class="who">Qwen · Codex · Gemini</div><h3>Gate</h3><p>Qwen and Codex attack the diff and either can veto; Gemini advises. Both blockers must pass.</p></div>
       <div class="stage s5 reveal"><span class="conn" aria-hidden="true">→</span><div class="num">05</div><div class="who">Done</div><h3>Deliver</h3><p>A reviewed <code class="e">diff.patch</code> ready for <code class="e">qcode merge</code>.</p></div>
     </div>
     <div class="loopback reveal">
       <span class="lb-ic" aria-hidden="true"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/></svg></span>
-      <div>When a reviewer finds a real defect, <b>Gate → Execute</b> loops back, up to <b>3×</b> — then the job hands back <span class="mono" style="color:var(--rose)">status=blocked</span> with the diff and findings attached. Nothing merges on a failure.</div>
+      <div>When a <b>blocking</b> reviewer (Qwen or Codex) finds a real defect, <b>Gate → Execute</b> loops back, up to <b>3×</b> — then the job hands back <span class="mono" style="color:var(--rose)">status=blocked</span> with the diff, findings, and Gemini's advisory notes attached. Nothing merges on a failure.</div>
     </div>
   </div>
 </section>
@@ -285,12 +286,12 @@
     <div class="sec-head reveal">
       <span class="eyebrow">Under the hood</span>
       <h2>Wraps proven parts, builds only what's new</h2>
-      <p>The executor is <b>Aider</b> in architect/editor mode — it already ships the hard parts (SEARCH/REPLACE edits, a test-fix loop, repo-mapping). qcode owns the genuinely new layer: the queue, the worktree isolation, and the mixed adversarial gate.</p>
+      <p>The executor is <b>Aider</b> in architect/editor mode — it already ships the hard parts (SEARCH/REPLACE edits, a test-fix loop, repo-mapping). qcode owns the genuinely new layer: the queue, the worktree isolation, and the cross-vendor adversarial gate.</p>
     </div>
     <div class="arch-grid">
       <div class="acard reveal"><span class="tag a">planner</span><h3>Claude via the CLI</h3><p>Shells out to <code>claude -p</code> — reuses your Claude Code subscription, no separate API key. Emits a validated JSON plan and the acceptance oracle.</p></div>
       <div class="acard reveal"><span class="tag e">executor</span><h3>Aider, editor = local Qwen</h3><p><code>--architect</code> with <code>--editor-model openai/qwen</code> pointed at LiteLLM <code>:4000</code>. Runs <code>--no-auto-commits</code> in the worktree with <code>--test-cmd</code>.</p></div>
-      <div class="acard reveal"><span class="tag r">reviewers</span><h3>1 Claude + 1 Qwen skeptic</h3><p>Independent, blocking, execution-grounded. Each is prompted to refute against the acceptance criteria — a defect only counts with a concrete failing scenario.</p></div>
+      <div class="acard reveal"><span class="tag r">reviewers</span><h3>Qwen + Codex block · Gemini advises</h3><p>Qwen (local) and <code>codex exec</code> block — independent, execution-grounded, each refuting against the acceptance criteria; a defect only counts with a concrete failing scenario. <code>gemini -p</code> adds an advisory third lens. All reuse subscription logins, no API keys.</p></div>
       <div class="acard reveal"><span class="tag v">queue</span><h3>File-based daemon</h3><p>Jobs live as files under <code>~/.qcode/jobs/&lt;id&gt;/</code>. The filesystem is the queue and the status API — no socket, serial by construction, crash-durable.</p></div>
     </div>
   </div>
@@ -326,13 +327,15 @@
     <div class="sec-head reveal">
       <span class="eyebrow">Setup</span>
       <h2>What it runs on</h2>
-      <p>qcode is the thin orchestrator; these are the pieces it drives. All local except the Claude planner/reviewer, which use your existing Claude Code login.</p>
+      <p>qcode is the thin orchestrator; these are the pieces it drives. All local except the Claude planner and the Codex + Gemini reviewers, which reuse your existing subscription logins — no API keys.</p>
     </div>
     <pre class="reveal"><span class="c"># prerequisites</span>
 <span class="c">•</span> Node 20+            <span class="c"># the qcode CLI + daemon (TypeScript)</span>
-<span class="c">•</span> claude CLI          <span class="c"># planner + Claude reviewer (claude -p)</span>
+<span class="c">•</span> claude CLI          <span class="c"># planner: plan + failing oracle tests (claude -p)</span>
 <span class="c">•</span> aider               <span class="c"># the executor engine (pip/uv install aider)</span>
-<span class="c">•</span> Qwen on <span class="s">:4000</span>       <span class="c"># local MoE via LiteLLM → MLX (Qwen3-Coder-30B-A3B)</span>
+<span class="c">•</span> Qwen on <span class="s">:4000</span>       <span class="c"># local MoE via LiteLLM → MLX (Qwen3-Coder-30B-A3B) — executor + blocking reviewer</span>
+<span class="c">•</span> codex CLI           <span class="c"># blocking reviewer (codex exec · your subscription)</span>
+<span class="c">•</span> gemini CLI          <span class="c"># advisory reviewer (gemini -p · your subscription)</span>
 
 <span class="c"># once built:</span>
 <span class="a">npm i -g qcode</span>
@@ -352,8 +355,8 @@
     <div class="principles">
       <div class="pr reveal"><div class="n">01</div><div><h3>"Done" is objective</h3><p>Claude writes the failing tests before any code. The executor grinds against ground truth, not vibes — so a fast, weaker model can be trusted to iterate on its own.</p></div></div>
       <div class="pr reveal"><div class="n">02</div><div><h3>Review is execution, not opinion</h3><p>The skeptics run the tests, types and linters and try to construct a breaking input — an adversary that executes beats one that only reads.</p></div></div>
-      <div class="pr reveal"><div class="n">03</div><div><h3>Two lenses, independently</h3><p>A strong Claude skeptic plus a cheap local one catch different failure modes. Blocking on both is the quality multiplier — not belt-and-suspenders.</p></div></div>
-      <div class="pr reveal"><div class="n">04</div><div><h3>Honest about status</h3><p>No auto-merge, no silent truncation. A job is <span class="mono accent-e">done</span> only when tests and both reviewers pass; otherwise it's <span class="mono accent-r">blocked</span> with the evidence attached.</p></div></div>
+      <div class="pr reveal"><div class="n">03</div><div><h3>Three vendors, three blind spots</h3><p>The gate spans three vendors — Alibaba's Qwen, OpenAI's Codex, Google's Gemini — with no shared training, so no shared blind spots. Codex and Gemini never saw the code written; Qwen re-attacks its own diff in a fresh context, prompted to refute, not defend. Qwen and Codex can each veto; Gemini rides along as a free frontier lens. Diversity and independence, not strong-versus-cheap, is what catches the defect the author couldn't see.</p></div></div>
+      <div class="pr reveal"><div class="n">04</div><div><h3>Honest about status</h3><p>No auto-merge, no silent truncation. A job is <span class="mono accent-e">done</span> only when tests and both blocking reviewers (Qwen + Codex) pass; otherwise it's <span class="mono accent-r">blocked</span> with the evidence — and Gemini's advisory notes — attached.</p></div></div>
     </div>
   </div>
 </section>
@@ -367,7 +370,7 @@
       <p>Each release earns its keep before the next. Only the keystone — objective, execution-gated "done" — is a mistake to defer.</p>
     </div>
     <div class="road">
-      <div class="rrow now reveal"><span class="v">v1.0 <span class="badge">next</span></span><p><b>The pipeline.</b> Plan → worktree → execute → mixed adversarial gate → reviewed diff. Test-first + execution-grounded review built in.</p></div>
+      <div class="rrow now reveal"><span class="v">v1.0 <span class="badge">next</span></span><p><b>The pipeline.</b> Plan → worktree → execute → cross-vendor adversarial gate → reviewed diff. Test-first + execution-grounded review built in.</p></div>
       <div class="rrow reveal"><span class="v">v1.1</span><p><b>Fleet router.</b> Route trivial steps to the 245 tok/s Qwen-1.5B tier; only hard steps hit the MoE.</p></div>
       <div class="rrow reveal"><span class="v">v1.2</span><p><b>Parallel jobs.</b> Independent branches of the plan DAG run concurrently in separate worktrees.</p></div>
       <div class="rrow reveal"><span class="v">v1.3</span><p><b>Compounding memory.</b> A per-repo store of conventions and rejected diffs makes every future job smarter.</p></div>
