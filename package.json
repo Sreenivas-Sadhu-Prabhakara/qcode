@@ -1,0 +1,17 @@
+{
+  "name": "qcode",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "qcode": "dist/cli.js" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "@types/node": "^20.14.0"
+  }
+}
