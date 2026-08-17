@@ -44,3 +44,13 @@ export interface ExecOutcome {
   applied: boolean;
   output: string;
 }
+
+export type JobStatus = 'done' | 'blocked';
+
+export interface JobResult {
+  status: JobStatus;
+  diff: string;
+  testOutput: string;
+  gate: GateResult;
+  loops: number;
+}
